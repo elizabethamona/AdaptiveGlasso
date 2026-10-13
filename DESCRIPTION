@@ -1,0 +1,28 @@
+Package: AdaptiveGlasso
+Title: Adaptive Graphical Lasso for Sparse Network Estimation
+Version: 0.0.0.9000
+Authors@R:
+    person(
+        given = "Elizabeth B.",
+        family = "Amona",
+        email = "amonaelizabeth1@gmail.com",
+        role = c("aut", "cre"),
+        comment = c(ORCID = "0000-0002-7575-788X")
+    )
+Description: Implements an adaptive graphical lasso method for sparse
+    precision matrix and network estimation. The method combines ridge
+    stabilization, cross-validated regularization, an initial graphical
+    lasso estimate, and adaptive edge-specific penalties to estimate
+    sparse conditional dependence structures. The method supports
+    settings where the sample size is smaller than, equal to, or larger
+    than the number of variables.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Imports:
+    CVglasso,
+    glasso
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

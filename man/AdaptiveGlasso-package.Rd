@@ -70,7 +70,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Elizabeth B. Amona \email{amonaelizabeth1@gmail.com} (\href{https://orcid.org/0000-0002-7575-788X}{ORCID})
+\strong{Maintainer}: Elizabeth B. Amona \email{amonaelizabeth1@gmail.com} (\href{https://orcid.org/0000-0002-7575-788X}{ORCID}) [copyright holder]
 
 }
 \keyword{internal}

@@ -6,7 +6,7 @@ Authors@R:
         given = "Elizabeth B.",
         family = "Amona",
         email = "amonaelizabeth1@gmail.com",
-        role = c("aut", "cre"),
+        role = c("aut", "cre", "cph"),
         comment = c(ORCID = "0000-0002-7575-788X")
     )
 Description: Implements an adaptive graphical lasso method for sparse

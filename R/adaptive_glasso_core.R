@@ -3,7 +3,7 @@
     ridge = 0.10,
     d = 0.32,
     lambda,
-    penalize_diagonal = FALSE,
+    penalize_diagonal = TRUE,
     tol = 1e-4,
     maxit = 10000L
 ) {

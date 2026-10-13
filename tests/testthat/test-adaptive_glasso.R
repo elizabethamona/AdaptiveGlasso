@@ -11,7 +11,7 @@ test_that("adaptive_glasso returns a valid fitted object", {
     d = 0.32,
     lambda = 0.20,
     standardize = TRUE,
-    penalize_diagonal = FALSE
+    penalize_diagonal = TRUE
   )
 
   expect_s3_class(fit, "adaptive_glasso_fit")

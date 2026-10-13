@@ -1,34 +1,64 @@
 #' Fit an adaptive graphical lasso model
 #'
-#' Fits the adaptive graphical lasso using ridge stabilization,
-#' an initial graphical lasso estimate, adaptive edge-specific
-#' penalties, and a final weighted graphical lasso estimate.
+#' Fits an adaptive graphical lasso model for sparse precision-matrix
+#' and network estimation. The procedure combines ridge stabilization,
+#' an initial graphical lasso estimate, adaptive edge-specific penalties,
+#' and a final weighted graphical lasso estimate.
 #'
-#' If `lambda` is not supplied, it is selected by cross-validation
-#' using `CVglasso`.
+#' @details
+#' The sample covariance matrix is first ridge-stabilized as
+#' \deqn{S_{\delta} = S + \delta I,}
+#' where `ridge` corresponds to \eqn{\delta}.
 #'
-#' @param x Numeric matrix or data frame with observations in rows
-#'   and variables in columns.
-#' @param ridge Non-negative ridge stabilization constant added to
-#'   the sample covariance diagonal. Default is 0.10.
-#' @param d Positive stabilization constant used in the adaptive
-#'   weights. Default is 0.32.
-#' @param lambda Optional positive regularization parameter.
-#'   If `NULL`, it is selected by cross-validation.
+#' An initial graphical lasso estimate is then used to construct the
+#' adaptive weights
+#' \deqn{w_{ij} = \frac{1}{|\hat{\omega}^{init}_{ij}| + d},}
+#' followed by the edge-specific penalties
+#' \deqn{\rho_{ij} = \lambda w_{ij}.}
+#'
+#' The value of `lambda` can be handled in two ways:
+#'
+#' - `lambda = NULL`: `lambda` is selected automatically by
+#'   cross-validation using `CVglasso`.
+#' - `lambda =` a positive numeric value: the supplied value is used
+#'   directly and cross-validation is not performed.
+#'
+#' The method can be applied when the number of observations is smaller
+#' than, equal to, or larger than the number of variables.
+#'
+#' @param x Numeric matrix or data frame with observations in rows and
+#'   variables in columns.
+#' @param ridge Non-negative ridge stabilization constant added to the
+#'   diagonal of the sample covariance matrix. Default is `0.10`.
+#' @param d Positive stabilization constant used in the adaptive weights
+#'   \eqn{w_{ij} = 1/(|\hat{\omega}^{init}_{ij}| + d)}.
+#'   Default is `0.32`.
+#' @param lambda Optional positive regularization parameter. If `NULL`,
+#'   `lambda` is selected automatically by cross-validation using
+#'   `CVglasso`. If a positive numeric value is supplied, that fixed value
+#'   is used and cross-validation is skipped.
 #' @param lam.min.ratio Minimum-to-maximum lambda ratio used by
-#'   `CVglasso`. Default is 0.01.
-#' @param nfolds Number of cross-validation folds. Default is 5.
+#'   `CVglasso` when `lambda = NULL`. Default is `0.01`.
+#' @param nfolds Number of cross-validation folds used when
+#'   `lambda = NULL`. Default is `5`.
 #' @param standardize Logical; if `TRUE`, variables are standardized
 #'   before fitting. Default is `TRUE`.
-#' @param seed Optional integer seed used for cross-validation.
-#'   Default is 123.
-#' @param penalize_diagonal Logical; whether diagonal precision
-#'   elements are penalized. Default is `FALSE`.
-#' @param tol Positive convergence tolerance. Default is 1e-4.
+#' @param seed Optional integer seed used for reproducibility of
+#'   cross-validation when `lambda = NULL`. Default is `123`.
+#' @param penalize_diagonal Logical; whether diagonal precision-matrix
+#'   elements are penalized. Default is `TRUE`, matching the fitting
+#'   procedure used in the motivating analysis.
+#' @param tol Positive convergence tolerance passed to the graphical
+#'   lasso fitting routines. Default is `1e-4`.
 #' @param maxit Maximum number of graphical lasso iterations.
-#'   Default is 10000.
+#'   Default is `10000`.
 #'
-#' @return An object of class `"adaptive_glasso_fit"`.
+#' @return An object of class `"adaptive_glasso_fit"` containing the
+#'   fitted precision and covariance matrices, adjacency matrix, initial
+#'   precision estimate, adaptive weights, adaptive penalty matrix,
+#'   selected or supplied `lambda`, ridge and adaptive stabilization
+#'   constants, cross-validation results when applicable, and fitting
+#'   diagnostics.
 #'
 #' @examples
 #' set.seed(123)
@@ -39,13 +69,23 @@
 #'   ncol = 6
 #' )
 #'
+#' # Use a fixed lambda: cross-validation is not performed
 #' fit <- adaptive_glasso(
 #'   x,
-#'   lambda = 0.20
+#'   lambda = 0.195237
 #' )
 #'
 #' fit
 #' coef(fit, type = "precision")
+#'
+#' # Select lambda automatically by cross-validation
+#' fit_cv <- adaptive_glasso(
+#'   x,
+#'   lambda = NULL,
+#'   nfolds = 3
+#' )
+#'
+#' fit_cv$lambda
 #'
 #' @export
 adaptive_glasso <- function(
@@ -57,7 +97,7 @@ adaptive_glasso <- function(
     nfolds = 5L,
     standardize = TRUE,
     seed = 123L,
-    penalize_diagonal = FALSE,
+    penalize_diagonal = TRUE,
     tol = 1e-4,
     maxit = 10000L
 ) {
@@ -200,7 +240,7 @@ adaptive_glasso <- function(
       lam.min.ratio = lam.min.ratio,
       nobs = nrow(x_fit),
       K = nfolds,
-      diagonal = penalize_diagonal,
+      diagonal = FALSE,
       tol = tol,
       maxit = maxit,
       trace = "none"

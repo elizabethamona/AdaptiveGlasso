@@ -61,6 +61,14 @@ fit
 coef(fit, type = "precision")
 
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/elizabethamona/AdaptiveGlasso}
+  \item Report bugs at \url{https://github.com/elizabethamona/AdaptiveGlasso/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Elizabeth B. Amona \email{amonaelizabeth1@gmail.com} (\href{https://orcid.org/0000-0002-7575-788X}{ORCID})
 

@@ -1,6 +1,6 @@
 Package: AdaptiveGlasso
 Title: Adaptive Graphical Lasso for Sparse Network Estimation
-Version: 0.0.0.9000
+Version: 1.0.0
 Authors@R:
     person(
         given = "Elizabeth B.",
@@ -16,6 +16,8 @@ Description: Implements an adaptive graphical lasso method for sparse
     sparse conditional dependence structures. The method supports
     settings where the sample size is smaller than, equal to, or larger
     than the number of variables.
+URL: https://github.com/elizabethamona/AdaptiveGlasso
+BugReports: https://github.com/elizabethamona/AdaptiveGlasso/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
